@@ -71,65 +71,68 @@ var copyRecursiveSync = async function(fs, src, dest) {
 
 describe('submodule commands', () => {
   // it('submodules are still staged after fresh clone', async () => {
-  ;(process.browser ? xit : it)('submodules are still staged after fresh clone', async () => {
-    const { fs, dir, gitdir } = await makeFixture('test-clone-submodules')
-    console.log('fs:')
-    console.log(fs)
-    await clone({
-      fs,
-      http,
-      dir,
-      gitdir,
-      url: `http://${localhost}:8888/test-submodules.git`,
-    })
-    // Test
-    expect(await listFiles({ fs, gitdir })).toContain('test.empty')
+  ;(process.browser ? xit : it)(
+    'submodules are still staged after fresh clone',
+    async () => {
+      const { fs, dir, gitdir } = await makeFixture('test-clone-submodules')
+      console.log('fs:')
+      console.log(fs)
+      await clone({
+        fs,
+        http,
+        dir,
+        gitdir,
+        url: `http://${localhost}:8888/test-submodules.git`,
+      })
+      // Test
+      expect(await listFiles({ fs, gitdir })).toContain('test.empty')
 
-    // copy the .git folder into an expected location which is dir/.git
-    const mainGitDir = path.join(dir, '.git')
-    await copyRecursiveSync(fs, gitdir, mainGitDir)
+      // copy the .git folder into an expected location which is dir/.git
+      const mainGitDir = path.join(dir, '.git')
+      await copyRecursiveSync(fs, gitdir, mainGitDir)
 
-    // Write a ".git" file into the submodule
-    const officialSubmoduleDir = path.join(dir, 'test.empty')
-    const submoduleGitFile = path.join(officialSubmoduleDir, '.git')
-    const submoduleGitFileContent = 'gitdir: ../.git/modules/test.empty\n'
-    await fs._writeFile(submoduleGitFile, submoduleGitFileContent)
+      // Write a ".git" file into the submodule
+      const officialSubmoduleDir = path.join(dir, 'test.empty')
+      const submoduleGitFile = path.join(officialSubmoduleDir, '.git')
+      const submoduleGitFileContent = 'gitdir: ../.git/modules/test.empty\n'
+      await fs._writeFile(submoduleGitFile, submoduleGitFileContent)
 
-    // The submodule itself needs a git dir
-    const {
-      fs: submoduleFs,
-      dir: submoduleDir,
-      gitdir: submoduleGitdir,
-    } = await makeFixture('test-currentBranch')
-    await clone({
-      fs: submoduleFs,
-      http,
-      dir: submoduleDir,
-      gitdir: submoduleGitdir,
-      url: `http://${localhost}:8888/test-currentBranch.git`,
-    })
+      // The submodule itself needs a git dir
+      const {
+        fs: submoduleFs,
+        dir: submoduleDir,
+        gitdir: submoduleGitdir,
+      } = await makeFixture('test-currentBranch')
+      await clone({
+        fs: submoduleFs,
+        http,
+        dir: submoduleDir,
+        gitdir: submoduleGitdir,
+        url: `http://${localhost}:8888/test-currentBranch.git`,
+      })
 
-    // copy the submodules .git folder into an expected location which is dir/.git/modules/test.empty
-    const submoduleMainGitdir = path.join(dir, '.git/modules/test.empty')
-    await fs._mkdir(path.join(dir, '.git/modules'))
-    await copyRecursiveSync(submoduleFs, submoduleGitdir, submoduleMainGitdir)
+      // copy the submodules .git folder into an expected location which is dir/.git/modules/test.empty
+      const submoduleMainGitdir = path.join(dir, '.git/modules/test.empty')
+      await fs._mkdir(path.join(dir, '.git/modules'))
+      await copyRecursiveSync(submoduleFs, submoduleGitdir, submoduleMainGitdir)
 
-    // Test the 'currentBranch' command
-    const branch = await currentBranch({
-      fs,
-      dir: officialSubmoduleDir,
-      fullname: false,
-    })
-    // Test
-    expect(branch).toEqual('master')
+      // Test the 'currentBranch' command
+      const branch = await currentBranch({
+        fs,
+        dir: officialSubmoduleDir,
+        fullname: false,
+      })
+      // Test
+      expect(branch).toEqual('master')
 
-    // Test the 'resolveRef' command
-    const ref = await resolveRef({
-      fs,
-      dir: officialSubmoduleDir,
-      ref: 'HEAD',
-    })
-    // Test
-    expect(ref).toEqual('033417ae18b174f078f2f44232cb7a374f4c60ce')
-  })
+      // Test the 'resolveRef' command
+      const ref = await resolveRef({
+        fs,
+        dir: officialSubmoduleDir,
+        ref: 'HEAD',
+      })
+      // Test
+      expect(ref).toEqual('033417ae18b174f078f2f44232cb7a374f4c60ce')
+    }
+  )
 })
