@@ -1,7 +1,7 @@
 /* eslint-env node, browser, jasmine */
 
 import * as path from 'path'
-import * as util from 'util'
+// import * as util from 'util'
 
 import http from 'isomorphic-git/http'
 
@@ -18,8 +18,11 @@ const { makeFixture } = require('./__helpers__/FixtureFS.js')
 const localhost =
   typeof window === 'undefined' ? 'localhost' : window.location.hostname
 
-console.log('Dump environment')
-console.log(util.inspect(process.env, false, null, true /* enable colors */))
+// console.log('Dump environment')
+// console.log(util.inspect(process.env, false, null, true /* enable colors */))
+// Object.entries(process.env).map(([key, value]) => (console.log(key); console.log(value)))
+// Object.entries(process.env).map(([key, value]) => console.log(value))
+
 // console.log(process.env)
 
 // This test is currently not working on browsers, however that is due to the lack
@@ -67,7 +70,8 @@ var copyRecursiveSync = async function(fs, src, dest) {
 }
 
 describe('submodule commands', () => {
-  it('submodules are still staged after fresh clone', async () => {
+  // it('submodules are still staged after fresh clone', async () => {
+  ;(process.browser ? xit : it)('submodules are still staged after fresh clone', async () => {
     const { fs, dir, gitdir } = await makeFixture('test-clone-submodules')
     console.log('fs:')
     console.log(fs)
