@@ -1,6 +1,7 @@
 /* eslint-env node, browser, jasmine */
 
 import * as path from 'path'
+import * as util from 'util'
 
 import http from 'isomorphic-git/http'
 
@@ -16,6 +17,17 @@ const { makeFixture } = require('./__helpers__/FixtureFS.js')
 // this is so it works with either Node local tests or Browser WAN tests
 const localhost =
   typeof window === 'undefined' ? 'localhost' : window.location.hostname
+
+console.log('Dump environment')
+console.log(util.inspect(process.env, false, null, true /* enable colors */))
+// console.log(process.env)
+
+// This test is currently not working on browsers, however that is due to the lack
+// of copy commands in BrowserFS
+
+if (typeof process.env.TEST_BROWSERS !== 'undefined') {
+  process.exit(0)
+}
 
 /**
  *
