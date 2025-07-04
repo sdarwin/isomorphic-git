@@ -24,19 +24,19 @@ const localhost =
  *
  */
 var copyRecursiveSync = async function(fs, src, dest) {
-  console.log('src to copy:')
-  console.log(src)
-  console.log('dest to copy:')
-  console.log(dest)
+  // console.log('src to copy:')
+  // console.log(src)
+  // console.log('dest to copy:')
+  // console.log(dest)
   var stats = await fs._stat(src)
-  console.log('after stat of src:')
+  // console.log('after stat of src:')
   var isDirectory = await stats.isDirectory()
   if (isDirectory) {
     await fs._mkdir(dest)
     const listofdirs = await fs._readdir(src)
-    console.log('listofdirs:')
-    console.log(listofdirs)
-    console.log(typeof listofdirs)
+    // console.log('listofdirs:')
+    // console.log(listofdirs)
+    // console.log(typeof listofdirs)
     listofdirs.forEach(async childItemName => {
       copyRecursiveSync(
         fs,
@@ -47,8 +47,8 @@ var copyRecursiveSync = async function(fs, src, dest) {
   } else {
     // fs.copyFileSync(fs, src, dest)
     const bufferx = await fs._readFile(src)
-    console.log('bufferx:')
-    console.log(bufferx)
+    // console.log('bufferx:')
+    // console.log(bufferx)
     // await fs._writeFile(dest, await fs._readFile(src))
     await fs._writeFile(dest, bufferx)
   }

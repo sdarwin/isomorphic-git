@@ -10,6 +10,7 @@ import { FileSystem } from '../models/FileSystem.js'
 import { _writeObject } from '../storage/writeObject.js'
 import { assertParameter } from '../utils/assertParameter.js'
 import { join } from '../utils/join.js'
+// import { discoverGitdir } from '../utils/discoverGitdir.js'
 import { posixifyPathBuffer } from '../utils/posixifyPathBuffer.js'
 
 /**

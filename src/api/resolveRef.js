@@ -36,7 +36,7 @@ export async function resolveRef({
     assertParameter('gitdir', gitdir)
     assertParameter('ref', ref)
     const fsp = new FileSystem(fs)
-    const updatedGitdir = await discoverGitdir(fsp, dir, gitdir)
+    const updatedGitdir = await discoverGitdir({ fsp, dotgit: gitdir })
 
     const oid = await GitRefManager.resolve({
       fs: fsp,

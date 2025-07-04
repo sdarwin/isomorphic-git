@@ -40,7 +40,7 @@ export async function currentBranch({
     assertParameter('fs', fs)
     assertParameter('gitdir', gitdir)
     const fsp = new FileSystem(fs)
-    const updatedGitdir = await discoverGitdir(fsp, dir, gitdir)
+    const updatedGitdir = await discoverGitdir({ fsp, dotgit: gitdir })
     return await _currentBranch({
       fs: fsp,
       gitdir: updatedGitdir,
