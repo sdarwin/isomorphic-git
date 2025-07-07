@@ -60,8 +60,8 @@ describe('submodule commands', () => {
     'submodules are still staged after fresh clone',
     async () => {
       const { fs, dir, gitdir } = await makeFixture('test-clone-submodules')
-      console.log('fs:')
-      console.log(fs)
+      // console.log('fs:')
+      // console.log(fs)
       await clone({
         fs,
         http,

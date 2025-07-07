@@ -28,8 +28,8 @@ const { makeFixture } = require('./FixtureFS.js')
 export async function makeFixtureAsSubmodule(fixture) {
   // Create fixture for submodule (sm)
   const { fs: fssm, dir: dirsm, gitdir: gitdirsm } = await makeFixture(fixture)
-  console.log('fssm:')
-  console.log(fssm)
+  // console.log('fssm:')
+  // console.log(fssm)
   console.log('dirsm:')
   console.log(dirsm)
   console.log('gitdirsm:')
@@ -49,8 +49,8 @@ export async function makeFixtureAsSubmodule(fixture) {
     gitdir: gitdirsp,
     url: `http://${localhost}:8888/test-submodules.git`,
   })
-  console.log('fssp:')
-  console.log(fssp)
+  // console.log('fssp:')
+  // console.log(fssp)
   console.log('dirsp:')
   console.log(dirsp)
   console.log('gitdirsp:')
