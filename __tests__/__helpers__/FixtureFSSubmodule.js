@@ -112,12 +112,13 @@ export async function makeFixtureAsSubmodule(fixture) {
 
   // Move the submodule's gitdir into place
   await fssp._mkdir(path.join(gitdirsp, 'modules'))
+  const gitdirsmfullpath = path.join(gitdirsp, 'modules', 'mysubmodule')
   // THE SYMLINK METHOD
   // await fssp._symlink(gitdirsm, path.join(gitdirsp, 'modules', 'mysubmodule'))
   // THE COPYRECURSIVESYNC METHOD
   // await copyRecursiveSync(fssp, gitdirsm, path.join(gitdirsp, 'modules', 'mysubmodule'))
   // THE SHELL METHOD
-  await copyRecursiveSyncShell(gitdirsm, path.join(gitdirsp, 'modules', 'mysubmodule'))
+  await copyRecursiveSyncShell(gitdirsm, gitdirsmfullpath)
 
   // Move the submodule's main dir into place
   const officialSubmoduleDir = path.join(dirsp, 'mysubmodule')
@@ -136,5 +137,6 @@ export async function makeFixtureAsSubmodule(fixture) {
   // Notice that the returned values correspond to the submodule
   // and even include the 'tricky' submoduleGitFile which is just
   // a plain file named '.git'.
-  return { fs: fssp, dir: officialSubmoduleDir, gitdir: submoduleGitFile }
+  // gitdirsmfullpath should only rarely be needed in tests.
+  return { fs: fssp, dir: officialSubmoduleDir, gitdir: submoduleGitFile, gitdirsmfullpath }
 }
