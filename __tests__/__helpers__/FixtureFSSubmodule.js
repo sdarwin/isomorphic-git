@@ -25,15 +25,69 @@ const { clone } = require('isomorphic-git')
 
 const { makeFixture } = require('./FixtureFS.js')
 
+/**
+ *
+ * Inspired by an answer at
+ * https://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js?answertab=createdasc#tab-top
+ *
+ * copyRecursiveSync is not working entirely even though a "diff" shows the copy is correct. Could be file permissions.
+ * An alternative is symlink. However that disrupts " git add '.' " for some reason.
+ * Fallback to a shell script copyRecursiveSyncShell which is used now.
+ *
+ */
+var copyRecursiveSync = async function(fs, src, dest) {
+  console.log('src to copy:')
+  console.log(src)
+  console.log('dest to copy:')
+  console.log(dest)
+  var stats = await fs._stat(src)
+  console.log('after stat of src:')
+  var isDirectory = await stats.isDirectory()
+  if (isDirectory) {
+    await fs._mkdir(dest)
+    const listofdirs = await fs._readdir(src)
+    console.log('listofdirs:')
+    console.log(listofdirs)
+    console.log(typeof listofdirs)
+    listofdirs.forEach(async childItemName => {
+      copyRecursiveSync(
+        fs,
+        path.join(src, childItemName),
+        path.join(dest, childItemName)
+      )
+    })
+  } else {
+    // fs.copyFileSync(fs, src, dest)
+    const bufferx = await fs._readFile(src)
+    console.log('bufferx:')
+    console.log(bufferx)
+    // await fs._writeFile(dest, await fs._readFile(src))
+    await fs._writeFile(dest, bufferx)
+  }
+}
+
+var copyRecursiveSyncShell = async function(src, dest) {
+    const { spawnSync } = require('child_process')
+    const output = spawnSync(
+      'cp -rp ' + String(src) + ' ' + String(dest) + ' ',
+      {
+        shell: '/bin/bash'
+      }
+    )
+    // console.log('copyRecursive:')
+    // console.log(`stderr: ${output.stderr.toString()}`)
+    // console.log(`stdout: ${output.stdout.toString()}`)
+}
+
 export async function makeFixtureAsSubmodule(fixture) {
   // Create fixture for submodule (sm)
   const { fs: fssm, dir: dirsm, gitdir: gitdirsm } = await makeFixture(fixture)
   // console.log('fssm:')
   // console.log(fssm)
-  console.log('dirsm:')
-  console.log(dirsm)
-  console.log('gitdirsm:')
-  console.log(gitdirsm)
+  // console.log('dirsm:')
+  // console.log(dirsm)
+  // console.log('gitdirsm:')
+  // console.log(gitdirsm)
 
   // Create fixture for superproject (sp)
   const { fs: fssp, dir: dirsp } = await makeFixture('superproject-' + fixture)
@@ -51,18 +105,28 @@ export async function makeFixtureAsSubmodule(fixture) {
   })
   // console.log('fssp:')
   // console.log(fssp)
-  console.log('dirsp:')
-  console.log(dirsp)
-  console.log('gitdirsp:')
-  console.log(gitdirsp)
+  // console.log('dirsp:')
+  // console.log(dirsp)
+  // console.log('gitdirsp:')
+  // console.log(gitdirsp)
 
   // Move the submodule's gitdir into place
   await fssp._mkdir(path.join(gitdirsp, 'modules'))
-  await fssp._symlink(gitdirsm, path.join(gitdirsp, 'modules', 'mysubmodule'))
+  // THE SYMLINK METHOD
+  // await fssp._symlink(gitdirsm, path.join(gitdirsp, 'modules', 'mysubmodule'))
+  // THE COPYRECURSIVESYNC METHOD
+  // await copyRecursiveSync(fssp, gitdirsm, path.join(gitdirsp, 'modules', 'mysubmodule'))
+  // THE SHELL METHOD
+  await copyRecursiveSyncShell(gitdirsm, path.join(gitdirsp, 'modules', 'mysubmodule'))
 
   // Move the submodule's main dir into place
   const officialSubmoduleDir = path.join(dirsp, 'mysubmodule')
-  await fssp._symlink(dirsm, officialSubmoduleDir)
+  // THE SYMLINK METHOD
+  // await fssp._symlink(dirsm, officialSubmoduleDir)
+  // THE COPYRECURSIVESYNC METHOD
+  // await copyRecursiveSync(fssp, dirsm, officialSubmoduleDir)
+  // THE SHELL METHOD
+  await copyRecursiveSyncShell(dirsm, officialSubmoduleDir)
 
   // Write a ".git" file into the submodule
   const submoduleGitFile = path.join(officialSubmoduleDir, '.git')
