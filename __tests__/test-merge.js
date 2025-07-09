@@ -712,7 +712,11 @@ describe('merge', () => {
       error = e
     }
     expect(await fs.read(outFile, 'utf-8')).toBeNull()
-    expect(await fs.readdir(dir)).toEqual([])
+    // GitIgnore will ignore '.git'. It should not be a problem for tests
+    // to ignore that file also.
+    let testfiles = await fs.readdir(dir)
+    testfiles = testfiles.filter(e => e !== '.git');
+    expect(testfiles).toEqual([])
     expect(error).not.toBeNull()
     expect(error.code).toBe(Errors.MergeConflictError.code)
   })
