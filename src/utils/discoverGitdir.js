@@ -30,4 +30,9 @@ export async function discoverGitdir({ fsp, dotgit }) {
         return gitdir
       })
   }
+  else {
+     // Neither a file nor a directory. This might correlate to a "git init" scenario where it's empty.
+     // Indeterminate. Return the most basic result:
+     return dotgit
+    }
 }
