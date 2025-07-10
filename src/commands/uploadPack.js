@@ -1,5 +1,4 @@
 import { GitRefManager } from '../managers/GitRefManager.js'
-import { discoverGitdir } from '../utils/discoverGitdir.js'
 import { join } from '../utils/join.js'
 import { writeRefsAdResponse } from '../wire/writeRefsAdResponse.js'
 
@@ -9,7 +8,6 @@ export async function uploadPack({
   gitdir = join(dir, '.git'),
   advertiseRefs = false,
 }) {
-  const updatedGitdir = await discoverGitdir({ fsp: fs, dotgit: gitdir })
   try {
     if (advertiseRefs) {
       // Send a refs advertisement
@@ -25,19 +23,19 @@ export async function uploadPack({
       ]
       let keys = await GitRefManager.listRefs({
         fs,
-        gitdir: updatedGitdir,
+        gitdir,
         filepath: 'refs',
       })
       keys = keys.map(ref => `refs/${ref}`)
       const refs = {}
       keys.unshift('HEAD') // HEAD must be the first in the list
       for (const key of keys) {
-        refs[key] = await GitRefManager.resolve({ fs, gitdir: updatedGitdir, ref: key })
+        refs[key] = await GitRefManager.resolve({ fs, gitdir, ref: key })
       }
       const symrefs = {}
       symrefs.HEAD = await GitRefManager.resolve({
         fs,
-        gitdir: updatedGitdir,
+        gitdir,
         ref: 'HEAD',
         depth: 2,
       })

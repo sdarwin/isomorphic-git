@@ -6,6 +6,14 @@
  *
  * Otherwise (if sent a directory) return that directory as-is.
  *
+ * It may be arbitrary but the implementation process submodules
+ * only in the front-end location of src/api/ rather than the backend of
+ * src/commands/. This keeps a clear division of responsibilities, and
+ * should be maintained.
+ *
+ * A consequence though is that submodule tests must
+ * sometimes be "aware" of submodules also, similar to src/api.
+ *
  */
 
 import * as path from 'path'
@@ -31,8 +39,9 @@ export async function discoverGitdir({ fsp, dotgit }) {
       })
   }
   else {
-     // Neither a file nor a directory. This might correlate to a "git init" scenario where it's empty.
-     // Indeterminate. Return the most basic result:
+     // Neither a file nor a directory. This correlates to a "git init" scenario where it's empty.
+     // This is the expected result for normal repos, and indeterminate for submodules, but
+     // would be unusual with submodules.
      return dotgit
     }
 }
