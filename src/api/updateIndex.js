@@ -5,6 +5,7 @@ import { GitIndexManager } from '../managers/GitIndexManager.js'
 import { FileSystem } from '../models/FileSystem.js'
 import { _writeObject } from '../storage/writeObject.js'
 import { assertParameter } from '../utils/assertParameter.js'
+import { discoverGitdir } from '../utils/discoverGitdir.js'
 import { join } from '../utils/join.js'
 
 /**
@@ -66,10 +67,11 @@ export async function updateIndex({
     assertParameter('filepath', filepath)
 
     const fs = new FileSystem(_fs)
+    const updatedGitdir = await discoverGitdir({ fsp: fs, dotgit: gitdir })
 
     if (remove) {
       return await GitIndexManager.acquire(
-        { fs, gitdir, cache },
+        { fs, gitdir: updatedGitdir, cache },
         async function(index) {
           if (!force) {
             // Check if the file is still present in the working directory
@@ -113,7 +115,7 @@ export async function updateIndex({
       }
     }
 
-    return await GitIndexManager.acquire({ fs, gitdir, cache }, async function(
+    return await GitIndexManager.acquire({ fs, gitdir: updatedGitdir, cache }, async function(
       index
     ) {
       if (!add && !index.has({ filepath })) {
@@ -134,7 +136,7 @@ export async function updateIndex({
 
         oid = await _writeObject({
           fs,
-          gitdir,
+          gitdir: updatedGitdir,
           type: 'blob',
           format: 'content',
           object,
