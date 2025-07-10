@@ -35,7 +35,8 @@ describe('checkout', () => {
         onPostCheckout.push(args)
       },
     })
-    const files = await fs.readdir(dir)
+    let files = await fs.readdir(dir)
+    files = files.filter(e => e !== '.git');
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         ".babelrc",
@@ -105,7 +106,8 @@ describe('checkout', () => {
       gitdir,
       ref: 'v1.0.0',
     })
-    const files = await fs.readdir(dir)
+    let files = await fs.readdir(dir)
+    files = files.filter(e => e !== '.git');
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         ".babelrc",
@@ -168,7 +170,8 @@ describe('checkout', () => {
       gitdir,
       ref: 'e10ebb90d03eaacca84de1af0a59b444232da99e',
     })
-    const files = await fs.readdir(dir)
+    let files = await fs.readdir(dir)
+    files = files.filter(e => e !== '.git');
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         ".babelrc",
@@ -321,7 +324,8 @@ describe('checkout', () => {
       ref: 'test-branch',
       filepaths: ['src/models', 'test'],
     })
-    const files = await fs.readdir(dir)
+    let files = await fs.readdir(dir)
+    files = files.filter(e => e !== '.git');
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         "src",
@@ -353,7 +357,8 @@ describe('checkout', () => {
       ref: 'test-branch',
       filepaths: ['src/models/GitBlob.js', 'src/utils/write.js'],
     })
-    const files = await fs.readdir(dir)
+    let files = await fs.readdir(dir)
+    files = files.filter(e => e !== '.git');
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         "src",
@@ -474,7 +479,8 @@ describe('checkout', () => {
       ref: 'test-branch',
       filepaths: ['src/utils', 'test'],
     })
-    const files = await fs.readdir(dir)
+    let files = await fs.readdir(dir)
+    files = files.filter(e => e !== '.git');
     expect(files).toContain('README.md')
   })
 
