@@ -9,9 +9,8 @@
  * A decision has to be made "in what layer will submodules be interpreted,
  * and then after that, where can the code can just stay exactly the same as before."
  * This implementation processes submodules in the front-end location of src/api/.
- * The backend of src/commands/ isn't modified.
- * This keeps a clear division of responsibilities and
- * should be maintained.
+ * The backend of src/commands/ isn't modified. This keeps a clear division
+ * of responsibilities and should be maintained.
  *
  * A consequence is that __tests__ must occasionally be informed
  * about submodules also, since those call src/commands/ directly.
