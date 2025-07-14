@@ -40,11 +40,10 @@ export async function discoverGitdir({ fsp, dotgit }) {
         const gitdir = path.join(path.dirname(dotgit), submoduleGitdir)
         return gitdir
       })
+  } else {
+    // Neither a file nor a directory. This correlates to a "git init" scenario where it's empty.
+    // This is the expected result for normal repos, and indeterminate for submodules, but
+    // would be unusual with submodules.
+    return dotgit
   }
-  else {
-     // Neither a file nor a directory. This correlates to a "git init" scenario where it's empty.
-     // This is the expected result for normal repos, and indeterminate for submodules, but
-     // would be unusual with submodules.
-     return dotgit
-    }
 }
