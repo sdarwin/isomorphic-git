@@ -270,8 +270,6 @@ describe('add', () => {
         await getConfig({ fs, dir, gitdir, path: 'core.autocrlf' })
       ).toEqual('true')
       let files = await fs.readdir(dir)
-      // GitIgnore will ignore '.git'. It should not be a problem for tests
-      // to ignore that file also.
       files = files.filter(e => e !== '.git')
       expect(files.sort()).toMatchInlineSnapshot(`
       Array [
