@@ -109,7 +109,13 @@ export async function stash({
           'number that is in range of [0, num of stash pushed]'
         )
       }
-      return await opFunc({ fs: _fs, dir, gitdir: updatedGitdir, message, refIdx })
+      return await opFunc({
+        fs: _fs,
+        dir,
+        gitdir: updatedGitdir,
+        message,
+        refIdx,
+      })
     }
     throw new Error(`To be implemented: ${op}`)
   } catch (err) {

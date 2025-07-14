@@ -49,7 +49,11 @@ export async function resetIndex({
 
     try {
       // Resolve commit
-      oid = await GitRefManager.resolve({ fs, gitdir: updatedGitdir, ref: ref || 'HEAD' })
+      oid = await GitRefManager.resolve({
+        fs,
+        gitdir: updatedGitdir,
+        ref: ref || 'HEAD',
+      })
     } catch (e) {
       if (ref) {
         // Only throw the error if a ref is explicitly provided
@@ -100,12 +104,15 @@ export async function resetIndex({
         stats = await fs.lstat(join(dir, filepath))
       }
     }
-    await GitIndexManager.acquire({ fs, gitdir: updatedGitdir, cache }, async function(index) {
-      index.delete({ filepath })
-      if (oid) {
-        index.insert({ filepath, stats, oid })
+    await GitIndexManager.acquire(
+      { fs, gitdir: updatedGitdir, cache },
+      async function(index) {
+        index.delete({ filepath })
+        if (oid) {
+          index.insert({ filepath, stats, oid })
+        }
       }
-    })
+    )
   } catch (err) {
     err.caller = 'git.reset'
     throw err
