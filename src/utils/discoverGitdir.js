@@ -6,13 +6,16 @@
  *
  * Otherwise (if sent a directory) return that directory as-is.
  *
- * It may be arbitrary but the implementation process submodules
- * only in the front-end location of src/api/ rather than the backend of
- * src/commands/. This keeps a clear division of responsibilities, and
+ * A decision has to be made "in what layer will submodules be interpreted,
+ * and then after that, where can the code can just stay exactly the same as before."
+ * This implementation processes submodules in the front-end location of src/api/.
+ * The backend of src/commands/ isn't modified.
+ * This keeps a clear division of responsibilities and
  * should be maintained.
  *
- * A consequence though is that submodule tests must
- * sometimes be "aware" of submodules also, similar to src/api.
+ * A consequence is that __tests__ must occasionally be informed
+ * about submodules also, since those may call src/commands/ directly.
+ *
  *
  */
 
