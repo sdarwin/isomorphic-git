@@ -11,7 +11,7 @@
 // However isometric-git's __fixtures__ are incomplete and can't always be checked out.
 // We want to test the same __fixtures__.
 // Therefore, create faux submodules such that at least their .git folder is properly positioned.
-// That's what discoverGitdir.js solves for, in any case. The way to run git
+// That's what discoverGitdir.js solves for. The way to run git
 // commands inside a submodule is to be aware of the remote location of the .git folder.
 
 import http from 'isomorphic-git/http'

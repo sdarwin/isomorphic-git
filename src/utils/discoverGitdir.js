@@ -14,7 +14,7 @@
  * should be maintained.
  *
  * A consequence is that __tests__ must occasionally be informed
- * about submodules also, since those may call src/commands/ directly.
+ * about submodules also, since those call src/commands/ directly.
  *
  *
  */
