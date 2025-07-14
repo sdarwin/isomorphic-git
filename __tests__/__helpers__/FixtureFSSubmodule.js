@@ -67,13 +67,16 @@ var copyRecursiveSync = async function(fs, src, dest) {
 }
 
 var copyRecursiveSyncShell = async function(src, dest) {
-  const { spawnSync } = require('child_process')
-  const output = spawnSync('cp -rp ' + String(src) + ' ' + String(dest) + ' ', {
-    shell: '/bin/bash',
-  })
-  // console.log('copyRecursive:')
-  // console.log(`stderr: ${output.stderr.toString()}`)
-  // console.log(`stdout: ${output.stdout.toString()}`)
+    const { spawnSync } = require('child_process')
+    const output = spawnSync(
+      'cp -rp ' + String(src) + ' ' + String(dest) + ' ',
+      {
+        shell: '/bin/bash'
+      }
+    )
+    // console.log('copyRecursive:')
+    // console.log(`stderr: ${output.stderr.toString()}`)
+    // console.log(`stdout: ${output.stdout.toString()}`)
 }
 
 export async function makeFixtureAsSubmodule(fixture) {
@@ -135,10 +138,5 @@ export async function makeFixtureAsSubmodule(fixture) {
   // and even include the 'tricky' submoduleGitFile which is just
   // a plain file named '.git'.
   // gitdirsmfullpath should only rarely be needed in tests.
-  return {
-    fs: fssp,
-    dir: officialSubmoduleDir,
-    gitdir: submoduleGitFile,
-    gitdirsmfullpath,
-  }
+  return { fs: fssp, dir: officialSubmoduleDir, gitdir: submoduleGitFile, gitdirsmfullpath }
 }

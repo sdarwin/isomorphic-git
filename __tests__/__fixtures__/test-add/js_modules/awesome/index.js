@@ -1,5 +1,5 @@
 module.exports = () => {
   return {
-    happiness: true,
+    happiness: true
   }
 }
