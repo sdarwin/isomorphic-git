@@ -36,7 +36,7 @@ describe('checkout', () => {
       },
     })
     let files = await fs.readdir(dir)
-    files = files.filter(e => e !== '.git');
+    files = files.filter(e => e !== '.git')
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         ".babelrc",
@@ -107,7 +107,7 @@ describe('checkout', () => {
       ref: 'v1.0.0',
     })
     let files = await fs.readdir(dir)
-    files = files.filter(e => e !== '.git');
+    files = files.filter(e => e !== '.git')
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         ".babelrc",
@@ -171,7 +171,7 @@ describe('checkout', () => {
       ref: 'e10ebb90d03eaacca84de1af0a59b444232da99e',
     })
     let files = await fs.readdir(dir)
-    files = files.filter(e => e !== '.git');
+    files = files.filter(e => e !== '.git')
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         ".babelrc",
@@ -325,7 +325,7 @@ describe('checkout', () => {
       filepaths: ['src/models', 'test'],
     })
     let files = await fs.readdir(dir)
-    files = files.filter(e => e !== '.git');
+    files = files.filter(e => e !== '.git')
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         "src",
@@ -358,7 +358,7 @@ describe('checkout', () => {
       filepaths: ['src/models/GitBlob.js', 'src/utils/write.js'],
     })
     let files = await fs.readdir(dir)
-    files = files.filter(e => e !== '.git');
+    files = files.filter(e => e !== '.git')
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         "src",
@@ -480,7 +480,7 @@ describe('checkout', () => {
       filepaths: ['src/utils', 'test'],
     })
     let files = await fs.readdir(dir)
-    files = files.filter(e => e !== '.git');
+    files = files.filter(e => e !== '.git')
     expect(files).toContain('README.md')
   })
 

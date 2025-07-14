@@ -244,7 +244,7 @@ describe('add', () => {
     let files = await fs.readdir(dir)
     // GitIgnore will ignore '.git'. It should not be a problem for tests
     // to ignore that file also.
-    files = files.filter(e => e !== '.git');
+    files = files.filter(e => e !== '.git')
     expect(files.sort()).toMatchInlineSnapshot(`
       Array [
         "20thcenturyfoodcourt.png",
