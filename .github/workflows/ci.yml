@@ -53,6 +53,13 @@ jobs:
         env:
           BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
+      - name: Patch cors-proxy for Windows
+        if: runner.os == 'Windows'
+        run: |
+          (Get-Content node_modules/@isomorphic-git/cors-proxy/bin.js) `
+            -replace 'spawn\(([^)]+)\)', 'spawn($1, { shell: true })' |
+            Set-Content node_modules/@isomorphic-git/cors-proxy/bin.js
+
       - name: Run tests (CLI)
         run: |
           # `test.typecheck` must be run after `build.rollup` and `build.typings`
