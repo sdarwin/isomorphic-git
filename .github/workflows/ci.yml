@@ -61,6 +61,7 @@ jobs:
             Set-Content node_modules/@isomorphic-git/cors-proxy/bin.js
 
       - name: Run tests (CLI)
+        shell: bash
         run: |
           # `test.typecheck` must be run after `build.rollup` and `build.typings`
           npx nps test.typecheck test.setup test.node
