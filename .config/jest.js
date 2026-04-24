@@ -24,4 +24,3 @@ export default function commonConfig(outputName) {
     transform: {}, // Empty transform for ES modules
   }
 }
-
