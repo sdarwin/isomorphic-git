@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build (${{ matrix.os }})
+    name: Build
     runs-on: ${{ matrix.os }}
 
     timeout-minutes: 10
@@ -63,7 +63,7 @@ jobs:
           BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
       - name: Run tests (CLI)
-        shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
+        shell: ${{ matrix.shell }}
         run: |
           # `test.typecheck` must be run after `build.rollup` and `build.typings`
           npx nps \
