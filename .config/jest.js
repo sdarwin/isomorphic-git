@@ -20,7 +20,6 @@ export default function commonConfig(outputName) {
       ],
     ],
     testTimeout: 60000,
-    workerIdleMemoryLimit: '200MB',
-    transform: {}, // Empty transform for ES modules
+    workerIdleMemoryLimit: '200MB'
   }
 }
