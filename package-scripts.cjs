@@ -15,8 +15,10 @@ const optional = cmd =>
   `(${cmd}) || echo "Optional command '${quote(cmd)}' failed".`
 
 const timeout = n => cmd => `timeout -t ${n}m -- ${cmd}`
-// const timeout5 = timeout(5)
-const timeout15 = timeout(15)
+// const timeout15 = timeout(15)
+const timeout15 = (command) =>
+  process.platform === 'win32' ? command : `timeout -t 15m -- ${command}`
+
 
 /**
  * Returns the environment variables to configure bundlewatch for the current CI provider.

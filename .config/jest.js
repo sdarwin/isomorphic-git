@@ -21,8 +21,6 @@ export default function commonConfig(outputName) {
     ],
     testTimeout: 60000,
     workerIdleMemoryLimit: '200MB',
-    // Enable ES modules support
-    extensionsToTreatAsEsm: ['.js'],
     transform: {},
     // Node's native module resolution for .js files
     globals: {
