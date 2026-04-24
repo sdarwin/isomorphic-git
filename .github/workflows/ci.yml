@@ -21,7 +21,6 @@ jobs:
     timeout-minutes: 10
 
     strategy:
-      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
@@ -64,7 +63,7 @@ jobs:
           BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
       - name: Run tests (CLI)
-        shell: ${{ matrix.shell }}
+        shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
         run: |
           # `test.typecheck` must be run after `build.rollup` and `build.typings`
           npx nps \
