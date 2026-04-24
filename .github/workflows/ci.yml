@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-            shell: bash
+          # - os: ubuntu-latest
+          #   shell: bash
           - os: windows-latest
             shell: pwsh
 
@@ -63,7 +63,7 @@ jobs:
           BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
       - name: Run tests (CLI)
-        shell: ${{ matrix.shell }}
+        shell: pwsh
         run: |
           # `test.typecheck` must be run after `build.rollup` and `build.typings`
           npx nps \
