@@ -15,10 +15,19 @@ concurrency:
 
 jobs:
   build:
-    name: Build
-    runs-on: ubuntu-latest
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
 
     timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            shell: bash
+          - os: windows-latest
+            shell: pwsh
 
     steps:
       - uses: actions/checkout@v4
@@ -36,10 +45,12 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD: true
 
       - name: Run lint
+        shell: bash
         run: |
           npx nps lint
 
       - name: Run build
+        shell: bash
         run: |
           # Run the subset of the `build` necessary to run the tests.
           npx nps \
@@ -53,6 +64,7 @@ jobs:
           BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
 
       - name: Run tests (CLI)
+        shell: ${{ matrix.shell }}
         run: |
           # `test.typecheck` must be run after `build.rollup` and `build.typings`
           npx nps \
@@ -64,7 +76,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-jest
+          name: test-results-jest-${{ matrix.os }}
           path: junit/*.xml
 
       # Problem: GitHub does not support Code Coverage reports like Azure Pipelines.
@@ -74,11 +86,12 @@ jobs:
         if: ${{ !cancelled() && !github.event.pull_request.head.repo.fork }}
         uses: actions/upload-artifact@v4
         with:
-          name: code-coverage-results
+          name: code-coverage-results-${{ matrix.os }}
           path: coverage/
 
       - name: Build artifacts
         if: ${{ !cancelled() && !github.event.pull_request.head.repo.fork }}
+        shell: bash
         run: |
           # Run the subset of the `test` necessary to test from the CLI.
           npx nps \
@@ -94,14 +107,14 @@ jobs:
         if: ${{ !cancelled() && !github.event.pull_request.head.repo.fork }}
         uses: actions/upload-artifact@v4
         with:
-          name: npm-tarball.tgz
+          name: npm-tarball.tgz-${{ matrix.os }}
           path: isomorphic-git-0.0.0-development.tgz
 
       - name: Save index.umd.min.js
         if: ${{ !cancelled() && !github.event.pull_request.head.repo.fork }}
         uses: actions/upload-artifact@v4
         with:
-          name: index.umd.min.js
+          name: index.umd.min.js-${{ matrix.os }}
           path: index.umd.min.js
 
   test-in-browser:
