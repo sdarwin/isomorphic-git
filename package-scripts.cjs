@@ -75,7 +75,7 @@ const jestBrowser = browserName => {
     // On CI we need to set environment variables differently depending on the shell
     if (process.platform === 'win32') {
       // PowerShell / cmd.exe compatible version using cross-env
-      return `cross-env ${jestEnv} JEST_BROWSER=${browserName} JEST_PUPPETEER_CONFIG=.config/jest-puppeteer.js ${retry3(timeout15(cmd))}`
+      return `cross-env ${jestEnv} JEST_BROWSER=${browserName} JEST_PUPPETEER_CONFIG=.config/jest-puppeteer.js ${retry3(cmd)}`
     } else {
       // Unix-like shells (bash, sh, etc.) – keep the original export style
       return `export ${jestEnv}\nexport JEST_BROWSER=${browserName}\nexport JEST_PUPPETEER_CONFIG=.config/jest-puppeteer.js\n${retry3(timeout15(cmd))}`
@@ -197,7 +197,7 @@ module.exports = {
           : series.nps('proxy.stop', 'gitserver.stop'),
       node: process.env.CI
         ? (process.platform === 'win32'
-            ? `cross-env ${jestEnv} ${retry3(timeout15(jestCommand))}`
+            ? `cross-env ${jestEnv} ${retry3(jestCommand)}`
             : `export ${jestEnv}\n${retry3(timeout15(jestCommand))}`)
         : `cross-env-shell ${jestEnv} ${jestCommand}`,
       chrome: jestBrowser('chrome'),
