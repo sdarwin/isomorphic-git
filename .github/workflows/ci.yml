@@ -27,6 +27,9 @@ jobs:
           - os: ubuntu-latest
           - os: windows-latest
 
+    env:
+      TEST_PUSH_GITHUB_TOKEN: ${{ secrets.TEST_PUSH_GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
 
