@@ -165,11 +165,14 @@ module.exports = {
     },
     // ATTENTION:
     // LIST OF SAFE PORTS FOR SAUCE LABS (Edge and Safari) https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQS-CanIAccessApplicationsonlocalhost?
-    // 'proxy' needs to run in the background during tests. I'm too lazy to auto start/stop it from within the browser tests.
+    // 'proxy' needs to run in the background during tests. The cors-proxy
+    // package's built-in start/stop daemonization is not Windows-compatible,
+    // so we use a small cross-platform helper that spawns `cors-proxy run`
+    // detached, writes a PID file, and waits for the port to be ready.
     proxy: {
       default: `cors-proxy run`,
-      start: `cors-proxy start`,
-      stop: `cors-proxy stop`,
+      start: `node __tests__/__helpers__/cors-proxy-daemon.cjs start`,
+      stop: `node __tests__/__helpers__/cors-proxy-daemon.cjs stop`,
     },
     gitserver: {
       default: `cross-env GIT_HTTP_MOCK_SERVER_PORT=8888 GIT_HTTP_MOCK_SERVER_ROOT=__tests__/__fixtures__ git-http-mock-server`,
@@ -188,14 +191,10 @@ module.exports = {
       ),
       browsers: series.nps('test.chrome', 'test.firefox'),
       typecheck: 'tsc -p tsconfig.json',
-      setup:
-        process.platform === 'win32'
-          ? series.nps('gitserver.start')
-          : series.nps('proxy.start', 'gitserver.start'),
-      teardown:
-        process.platform === 'win32'
-          ? series.nps('gitserver.stop')
-          : series.nps('proxy.stop', 'gitserver.stop'),
+      // cors-proxy.start is now driven by a cross-platform Node helper
+      // (see `proxy.start` above), so it runs on Windows too.
+      setup: series.nps('proxy.start', 'gitserver.start'),
+      teardown: series.nps('proxy.stop', 'gitserver.stop'),
       node: process.env.CI
         ? (process.platform === 'win32'
             ? `cross-env ${jestEnv} ${retry3(jestCommand)}`
